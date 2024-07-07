@@ -1,0 +1,13 @@
+{
+    "mongoURI": "mongodb+srv://cathandrallc:13MAMEmiMOMU13@cluster0.y7sfc8v.mongodb.net/fdstore?retryWrites=true&w=majority&appName=Cluster0",
+    "jwt": {
+      "secret": "wajidfdclersto",
+      "expiry": "1h"
+    },
+    "email": {
+      "username": "client@fortunederma.com",
+      "password": "#6FAFEfiFOFU#6",
+      "from": "client@fortunederma.com"
+    }
+  }
+  
