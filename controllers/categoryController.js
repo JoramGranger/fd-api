@@ -1,23 +1,21 @@
 const Category = require('../models/Category');
-/* const Product = require('../models/Product'); */
+const Product = require('../models/Product'); // Assuming you have a Product model
 
-// Create Category
 exports.createCategory = async (req, res) => {
-  const { name, parentCategory } = req.body;
+  const { name, superCategoryId } = req.body;
   try {
-    const newCategory = new Category({ name, parentCategory });
+    const newCategory = new Category({ name, superCategory: superCategoryId });
     await newCategory.save();
-    res.status(201).json(newCategory);
+    res.json(newCategory);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
   }
 };
 
-// Get All Categories
-exports.getAllCategories = async (req, res) => {
+exports.getCategories = async (req, res) => {
   try {
-    const categories = await Category.find().populate('parentCategory', 'name');
+    const categories = await Category.find().populate('superCategory', 'name');
     res.json(categories);
   } catch (err) {
     console.error(err.message);
@@ -25,29 +23,15 @@ exports.getAllCategories = async (req, res) => {
   }
 };
 
-// Get Category By ID
-exports.getCategoryById = async (req, res) => {
-  try {
-    const category = await Category.findById(req.params.id).populate('parentCategory', 'name');
-    if (!category) return res.status(404).json({ msg: 'Category not found' });
-    res.json(category);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
-  }
-};
-
-// Update Category
 exports.updateCategory = async (req, res) => {
-  const { name, parentCategory } = req.body;
+  const { name, superCategoryId } = req.body;
   try {
     const category = await Category.findById(req.params.id);
     if (!category) return res.status(404).json({ msg: 'Category not found' });
 
     category.name = name || category.name;
-    category.parentCategory = parentCategory || category.parentCategory;
+    category.superCategory = superCategoryId || category.superCategory;
     await category.save();
-
     res.json(category);
   } catch (err) {
     console.error(err.message);
@@ -55,26 +39,18 @@ exports.updateCategory = async (req, res) => {
   }
 };
 
-// Delete Category
 exports.deleteCategory = async (req, res) => {
   try {
     const category = await Category.findById(req.params.id);
     if (!category) return res.status(404).json({ msg: 'Category not found' });
 
-    // Check for subcategories
-    const subcategories = await Category.find({ parentCategory: category._id });
-    if (subcategories.length > 0) {
-      return res.status(400).json({ msg: 'Cannot delete category with subcategories' });
-    }
-
-    // Check for products
-    const products = await Product.find({ category: category._id });
+    const products = await Product.find({ category: req.params.id });
     if (products.length > 0) {
-      return res.status(400).json({ msg: 'Cannot delete category with products' });
+      return res.status(400).json({ msg: 'Category has products and cannot be deleted' });
     }
 
     await category.remove();
-    res.json({ msg: 'Category deleted' });
+    res.json({ msg: 'Category removed' });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
