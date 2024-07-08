@@ -86,6 +86,7 @@ exports.updateProfile = async (req, res) => {
     user.name = name || user.name;
     user.email = email || user.email;
     await user.save();
+    console.log(`${name} '' ${email}`);
 
     res.json(user);
   } catch (err) {
