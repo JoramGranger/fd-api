@@ -8,6 +8,7 @@ const cartRoutes = require('./routes/cartRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const rateLimit = require('./middleware/rateLimit');
 const config = require('config');
+const notificationRoutes = require('./routes/notificationRoutes');
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/carts', cartRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 const PORT = process.env.PORT || 5000;
 
