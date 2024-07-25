@@ -3,6 +3,7 @@ const connectDB = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
 const superCategoryRoutes = require('./routes/superCategoryRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
+const productRoutes = require('./routes/productRoutes');
 const rateLimit = require('./middleware/rateLimit');
 const config = require('config');
 
@@ -21,6 +22,7 @@ app.use(rateLimit);
 app.use('/api/users', userRoutes);
 app.use('/api/super-categories', superCategoryRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/products', productRoutes);
 
 const PORT = process.env.PORT || 5000;
 
