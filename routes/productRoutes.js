@@ -6,7 +6,7 @@ const auth = require('../middleware/auth');
 // pr
 router.get('/', productController.getProducts);
 router.get('/:id', productController.getProductById);
-router.get('/search/', productController.searchProducts)
+router.get('/search', productController.extractProducts);
 router.get('/category/:category', productController.getProductsByCategory);
 
 // ptdr

@@ -13,7 +13,7 @@ const app = express();
 connectDB();
 
 // Init Middleware
-app.use(express.json({ extended: false }));
+app.use(express.json());
 
 // Rate Limiting
 app.use(rateLimit);

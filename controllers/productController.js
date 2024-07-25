@@ -63,29 +63,34 @@ exports.deleteProduct =  async (req, res) => {
 };
 
 // search
-exports.searchProducts = async (req, res) => {
+exports.extractProducts = async (req, res) => {
+    console.log('Request received'); // Debugging line
+    console.log('Query parameters:', req.query); // Debugging line
     try {
-      const { q } = req.query;
-      console.log('Search query:', q);
-      if (!q) {
-        return res.status(400).json({ msg: 'Query parameter is required' });
-      }
-  
-      const regex = new RegExp(q, 'i'); 
-      console.log('Regex for search:', regex);
-      const products = await Product.find({
-        $or: [
-          { name: regex },
-          { description: regex },
-          { category: regex }
-        ]
-      });  
-      res.status(200).json(products);
+        const q  = req.query;
+        console.log('Search query:', q); // Debugging line
+        if (!q) {
+            return res.status(400).json({ msg: 'Query parameter is required' });
+        }
+
+        const regex = new RegExp(q, 'i'); 
+        console.log('Regex for search:', regex); // Debugging line
+
+        const products = await Product.find({
+            $or: [
+                { name: regex },
+                { description: regex },
+                { category: regex }
+            ]
+        });
+
+        res.status(200).json(products);
     } catch (err) {
-      console.error('Error occurred during product search:', err); 
-      res.status(500).json({ msg: 'Server error' });
+        console.error('Error occurred during product search:', err); 
+        res.status(500).json({ msg: 'Server error' });
     }
-  };
+};
+
 
 // category sort
 exports.getProductsByCategory = async(req, res) => {
@@ -101,7 +106,7 @@ exports.getProductsByCategory = async(req, res) => {
 // stock
 exports.updateProductStock = async (req, res) => {
     try {
-        const {stock} = req.params.body;
+        const {stock} = req.body;
         const product = await Product.findByIdAndUpdate(
             req.params.id,
             { stock },
@@ -113,3 +118,33 @@ exports.updateProductStock = async (req, res) => {
         res.status(500).json({msg: 'Server error '});
     }
 }
+
+    /* exports.updateProductStock = async (req, res) => {
+        console.log('Request body:', req.body); // Debugging line
+        console.log('Request params ID:', req.params.id); // Debugging line
+    
+        try {
+            const { stock } = req.body; // Extract stock from request body
+            
+            // Validate stock value
+            if (typeof stock !== 'number' || stock < 0) {
+                return res.status(400).json({ msg: 'Invalid stock value' });
+            }
+    
+            // Find the product by ID
+            const product = await Product.findById(req.params.id);
+            
+            if (!product) return res.status(404).json({ msg: 'Product not found' });
+            
+            // Update the stock field
+            product.stock = stock;
+            
+            // Save the updated product
+            await product.save();
+            
+            res.status(200).json(product);
+        } catch (err) {
+            console.error('Error updating product stock:', err); 
+            res.status(500).json({ msg: 'Server error' });
+        }
+    };  */   
