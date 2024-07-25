@@ -4,6 +4,8 @@ const userRoutes = require('./routes/userRoutes');
 const superCategoryRoutes = require('./routes/superCategoryRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const productRoutes = require('./routes/productRoutes');
+const cartRoutes = require('./routes/cartRoutes');
+const orderRoutes = require('./routes/orderRoutes');
 const rateLimit = require('./middleware/rateLimit');
 const config = require('config');
 
@@ -23,6 +25,8 @@ app.use('/api/users', userRoutes);
 app.use('/api/super-categories', superCategoryRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/carts', cartRoutes);
+app.use('/api/orders', orderRoutes);
 
 const PORT = process.env.PORT || 5000;
 
