@@ -5,6 +5,29 @@ const auth = require('../middleware/auth');
 const upload = require('../middleware/upload');
 const rateLimit = require('../middleware/rateLimit');
 
+/**
+ * @swagger
+ * /api/users:
+ *   get:
+ *     summary: Retrieve a list of users
+ *     responses:
+ *       200:
+ *         description: A list of users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     example: 12345
+ *                   name:
+ *                     type: string
+ *                     example: John Doe
+ */
+
 // pr
 router.post('/register', rateLimit, userController.register);
 router.post('/login', rateLimit, userController.login);

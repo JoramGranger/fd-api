@@ -1,4 +1,4 @@
-const sendEmail = require('../utilities/email');
+const sendEmail = require('../utils/email');
 
 exports.sendNotification = async (req, res) => {
     try {
