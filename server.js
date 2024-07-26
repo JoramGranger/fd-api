@@ -3,6 +3,7 @@ const connectDB = require('./config/db');
 const rateLimit = require('./middleware/rateLimit');
 const { swaggerUi, swaggerDocs } = require('./swagger');
 const apiRoutes = require('./routes/apiRoutes');
+const cors = require('cors');
 
 const app = express();
 
@@ -11,6 +12,13 @@ connectDB();
 
 // Init Middleware
 app.use(express.json());
+
+// CORS Middleware
+app.use(cors({
+    origin: 'http://localhost:3000', // Allow only this origin
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow only specific methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers
+  }));
 
 // Rate Limiting
 app.use(rateLimit);
