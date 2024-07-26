@@ -1,5 +1,7 @@
 // apiRoutes.js
 const express = require('express');
+const router = express.Router();
+
 const userRoutes = require('./userRoutes');
 const superCategoryRoutes = require('./superCategoryRoutes');
 const categoryRoutes = require('./categoryRoutes');
@@ -7,8 +9,6 @@ const productRoutes = require('./productRoutes');
 const cartRoutes = require('./cartRoutes');
 const orderRoutes = require('./orderRoutes');
 const notificationRoutes = require('./notificationRoutes');
-
-const router = express.Router();
 
 /**
  * @swagger

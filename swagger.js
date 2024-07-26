@@ -1,4 +1,3 @@
-// swagger.js
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 
@@ -19,9 +18,11 @@ const swaggerOptions = {
       ],
     },
   },
-  apis: ['./routes/apiRoutes'], // Path to the API docs
+  apis: ['./routes/apiRoutes.js'], // Path to the API docs
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
+
+console.log(swaggerDocs); // Add this line
 
 module.exports = { swaggerUi, swaggerDocs };

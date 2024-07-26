@@ -1,7 +1,6 @@
 const express = require('express');
 const connectDB = require('./config/db');
 const rateLimit = require('./middleware/rateLimit');
-const config = require('config');
 const { swaggerUi, swaggerDocs } = require('./swagger');
 const apiRoutes = require('./routes/apiRoutes');
 
