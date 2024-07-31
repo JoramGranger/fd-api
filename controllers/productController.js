@@ -1,11 +1,15 @@
+const multer = require('multer');
 const Product = require('../models/Product');
-
+/* const upload = multer({ dest: 'uploads/products/'}); */
 // create
 
 exports.createProduct = async (req, res) => {
     try {
-        const { name, description, price, category, stock, image} = req.body;
-        const product = new Product({ name, description, price, description, price, category, stock, image});
+        const { name, description, category, price, stock } = req.body;
+        const image = req.file ? req.file.path : '';
+        console.log('Request body', req.body);
+        console.log('file path', image);
+        const product = new Product({ name, description, category, price, stock, image});
         await product.save();
         res.status(201).json(product);
     } catch (err) {

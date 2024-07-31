@@ -20,6 +20,9 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers
   }));
 
+// Enable pre-flight requests for all routes
+app.options('*', cors());
+
 // Rate Limiting
 app.use(rateLimit);
 
