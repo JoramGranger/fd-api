@@ -4,6 +4,7 @@ const rateLimit = require('./middleware/rateLimit');
 const { swaggerUi, swaggerDocs } = require('./swagger');
 const apiRoutes = require('./routes/apiRoutes');
 const cors = require('cors');
+const path = require('path');
 
 const app = express();
 
@@ -28,6 +29,8 @@ app.use(rateLimit);
 
 // Swagger Documentation
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Define Routes
 app.use('/', apiRoutes);
