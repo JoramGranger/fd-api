@@ -43,10 +43,16 @@ exports.getProductById = async (req, res) => {
 exports.updateProduct = async (req, res) => {
     try {
         const {name, description, price, category, stock} = req.body;
-        const image = req.file ? req.file.path : '';
+        const updateData = { name, description, price, category, stock};
+
+        if (req.file) {
+            updateData.image = req.file.path;
+        }
+
+        //const image = req.file ? req.file.path : '';
         const product = await Product.findByIdAndUpdate(
             req.params.id,
-            { name, description, price, category, stock, image },
+            updateData,
             { new: true, runValidators: true }
         );
         if(!product) return res.status(404).json({ msg: 'Product not found'});
