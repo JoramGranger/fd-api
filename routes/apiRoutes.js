@@ -3,7 +3,6 @@ const express = require('express');
 const router = express.Router();
 
 const userRoutes = require('./userRoutes');
-const superCategoryRoutes = require('./superCategoryRoutes');
 const categoryRoutes = require('./categoryRoutes');
 const productRoutes = require('./productRoutes');
 const cartRoutes = require('./cartRoutes');
@@ -55,30 +54,6 @@ router.use('/api/users', userRoutes);
  *                   name:
  *                     type: string
  *                     example: Electronics
- */
-router.use('/api/super-categories', superCategoryRoutes);
-
-/**
- * @swagger
- * /api/categories:
- *   get:
- *     summary: Retrieve a list of categories
- *     responses:
- *       200:
- *         description: A list of categories
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: string
- *                     example: 12345
- *                   name:
- *                     type: string
- *                     example: Smartphones
  */
 router.use('/api/categories', categoryRoutes);
 

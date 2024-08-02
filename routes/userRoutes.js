@@ -36,6 +36,9 @@ router.post('/request-password-reset', rateLimit, userController.requestPassword
 router.post('/reset-password', rateLimit, userController.resetPassword);
 
 // ptdr
+router.get('/', auth.protect, auth.admin, userController.getAllUsers);
+router.get('/:userId', auth.protect, auth.admin, userController.getUserById);
+
 router.get('/profile', auth.protect, userController.getProfile);
 router.put('/profile', auth.protect, userController.updateProfile);
 router.post('/upload-avatar', auth.protect, upload.single('avatar'), userController.uploadAvatar);

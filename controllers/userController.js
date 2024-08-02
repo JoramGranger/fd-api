@@ -220,3 +220,37 @@ exports.reactivateUser = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+
+// Fetch all users
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find().select('-password');
+    res.json(users);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+// Fetch single user by ID
+exports.getUserById = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    console.log(`Fetching user with ID: ${userId}`);
+
+    if (!userId.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({ msg: 'Invalid user ID format' });
+    }
+
+    const user = await User.findById(userId).select('-password');
+    if (!user) {
+      console.log(`User not found with ID: ${userId}`);
+      return res.status(404).json({ msg: 'User not found' });
+    }
+
+    res.json(user);
+  } catch (err) {
+    console.error(`Server error: ${err.message}`);
+    res.status(500).send('Server error');
+  }
+};
