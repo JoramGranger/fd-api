@@ -1,8 +1,10 @@
 const User = require('../models/User');
+const Customer = require('../models/Customer');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const sendEmail = require('../utils/email');
 const generateToken = require('../utils/token');
+
 
 // Registration
 exports.register = async (req, res) => {
@@ -21,6 +23,10 @@ exports.register = async (req, res) => {
 
     await user.save();
     console.log('User Created!')
+
+    const customer = new Customer({ userId: user._id });
+    await customer.save();
+    console.log('Customer created');
 
     const message = `Please verify your email by clicking the following link: http://${req.headers.host}/api/users/verify/${verificationToken}`;
     await sendEmail({ to: user.email, subject: 'Email Verification', text: message });

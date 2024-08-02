@@ -7,6 +7,7 @@ const categoryRoutes = require('./categoryRoutes');
 const productRoutes = require('./productRoutes');
 const cartRoutes = require('./cartRoutes');
 const orderRoutes = require('./orderRoutes');
+const customerRoutes = require('./customerRoutes');
 const notificationRoutes = require('./notificationRoutes');
 
 /**
@@ -158,5 +159,6 @@ router.use('/api/orders', orderRoutes);
  *                     example: "Your order has been shipped"
  */
 router.use('/api/notifications', notificationRoutes);
+router.use('/api/customers', customerRoutes);
 
 module.exports = router;
