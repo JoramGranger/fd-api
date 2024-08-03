@@ -1,6 +1,15 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const PaymentMethodSchema = new Schema({
+  token: { type: String, required: true }, // Tokenized payment method
+  methodType: { type: String, enum: ['card', 'mobile'], required: true }, // Type of payment method
+  last4: { type: String }, // Last four digits of the card, if applicable
+  network: { type: String }, // Network name (e.g., 'Visa', 'MasterCard'), if applicable
+  mobileNumber: { type: String }, // Mobile number, if applicable
+  expiryDate: { type: String }, // Expiration date, if applicable
+});
+
 const CustomerSchema = new Schema({
   userId: { 
     type: Schema.Types.ObjectId, 
@@ -15,10 +24,7 @@ const CustomerSchema = new Schema({
     }
   ],
   paymentMethods: [
-    {
-      type: { type: String, required: false }, // e.g., 'credit card', 'PayPal'
-      details: { type: String, required: false } // Tokenized or encrypted details
-    }
+    PaymentMethodSchema
   ],
   orderHistory: [
     {
@@ -38,12 +44,6 @@ const CustomerSchema = new Schema({
       ref: 'Product'
     }
   ],
-  /* preferredContactMethod: { type: String, default: 'email' }, // 'email', 'phone', etc.
-  loyaltyPoints: { type: Number, default: 0 },
-  customerNotes: { type: String, default: '' },
-  preferredLanguage: { type: String, default: 'en' },
-  subscriptionStatus: { type: Boolean, default: false },
-  accountBalance: { type: Number, default: 0 }, */
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 });
