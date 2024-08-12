@@ -1,6 +1,7 @@
 // controllers/orderController.js
 const Order = require('../models/Order');
 const Cart = require('../models/Cart');
+const User = require('../models/User');
 const Customer = require('../models/Customer');
 const Product = require('../models/Product');
 const sendEmail = require('../utils/email');
@@ -8,10 +9,10 @@ const sendEmail = require('../utils/email');
 // Create an order from the cart
 exports.createOrderFromCart = async (req, res) => {
     try {
-        const customerId = req.user.id;
+        const { userId } = req.params;
 
         // Find the customer's cart
-        const cart = await Cart.findOne({ customer: customerId });
+        const cart = await Cart.findOne({ customer: userId });
         if (!cart) return res.status(404).json({ msg: 'Cart not found' });
 
         // Check if the cart is empty
@@ -49,7 +50,7 @@ exports.createOrderFromCart = async (req, res) => {
 
         // Create a new order
         const order = new Order({
-            customer: customerId,
+            customer: userId,
             items: itemsWithDetails,
             totalAmount,
             status: 'Pending', // Initial order status
@@ -60,10 +61,10 @@ exports.createOrderFromCart = async (req, res) => {
         await order.save();
 
         // Clear the cart after creating the order
-        await Cart.findOneAndDelete({ customer: customerId });
+        await Cart.findOneAndDelete({ customer: userId });
 
         // Send confirmation email to the customer
-        const customer = await Customer.findById(customerId);
+        const customer = await User.findById(userId);
         if (customer) {
             const emailOptions = {
                 to: customer.email,
