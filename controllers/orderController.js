@@ -2,7 +2,6 @@
 const Order = require('../models/Order');
 const Cart = require('../models/Cart');
 const User = require('../models/User');
-const Customer = require('../models/Customer');
 const Product = require('../models/Product');
 const sendEmail = require('../utils/email');
 
@@ -38,6 +37,13 @@ exports.createOrderFromCart = async (req, res) => {
             const itemTotal = product.price * item.quantity;
             totalAmount += itemTotal;
 
+            // Update product stock and sold count
+            product.stock -= item.quantity;
+            product.sold += item.quantity;
+
+            // Save the updated product
+            await product.save();
+
             // Add detailed item information to the order
             itemsWithDetails.push({
                 product: item.product,
@@ -54,6 +60,7 @@ exports.createOrderFromCart = async (req, res) => {
             items: itemsWithDetails,
             totalAmount,
             status: 'Pending', // Initial order status
+            paymentMethod: req.body.paymentMethod, // Get payment method from request body
             createdAt: new Date()
         });
 
@@ -88,6 +95,11 @@ exports.updateOrderStatus = async (req, res) => {
         const { orderId } = req.params;
         const { status } = req.body;
 
+        // Validate status
+        if (!['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'].includes(status)) {
+            return res.status(400).json({ msg: 'Invalid status' });
+        }
+
         // Find the order
         const order = await Order.findById(orderId);
         if (!order) return res.status(404).json({ msg: 'Order not found' });
@@ -97,18 +109,47 @@ exports.updateOrderStatus = async (req, res) => {
         await order.save();
 
         // Notify the customer about the status update
-        const customer = await Customer.findById(order.customer);
+        const customer = await User.findById(order.customer);
         if (customer) {
             const emailOptions = {
                 to: customer.email,
                 subject: 'Order Status Update',
-                text: `Dear ${customer.name},\n\nYour order status has been updated to "${status}".\n\nBest regards,\nYour Company`
+                text: `Dear ${customer.name},\n\nYour order status has been updated to "${status}".\n\nBest regards,\nFortune Derma`
             };
             await sendEmail(emailOptions);
         }
 
         // Respond with the updated order
         res.status(200).json(order);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ msg: 'Server error' });
+    }
+};
+
+// Get all orders (admin access)
+exports.getAllOrders = async (req, res) => {
+    try {
+        const orders = await Order.find().populate('customer').populate('items.product');
+        res.status(200).json(orders);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ msg: 'Server error' });
+    }
+};
+
+// Get all orders for a specific customer
+exports.getOrdersByCustomer = async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        // Find orders for the specific customer
+        const orders = await Order.find({ customer: userId }).populate('items.product');
+        if (orders.length === 0) {
+            return res.status(404).json({ msg: 'No orders found for this customer' });
+        }
+
+        res.status(200).json(orders);
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ msg: 'Server error' });

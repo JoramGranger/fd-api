@@ -30,8 +30,28 @@ const OrderSchema = new mongoose.Schema({
         enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'], 
         default: 'Pending' 
     },
-    createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now }
+    paymentMethod: { 
+        type: String, 
+        enum: ['Card', 'Mobile', 'Cash'],
+        required: true 
+    },
+    paymentStatus: {
+        type: String,
+        enum: ['Pending', 'Paid', 'Failed'],
+        default: 'Pending'
+    },
+    transactionID: {
+        type: String,
+        required: false
+    },
+    createdAt: { 
+        type: Date, 
+        default: Date.now 
+    },
+    updatedAt: { 
+        type: Date, 
+        default: Date.now 
+    }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Order', OrderSchema);
