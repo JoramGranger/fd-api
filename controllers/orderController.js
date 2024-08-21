@@ -155,3 +155,25 @@ exports.getOrdersByCustomer = async (req, res) => {
         res.status(500).json({ msg: 'Server error' });
     }
 };
+
+// Get order by ID
+exports.getOrderById = async (req, res) => {
+    try {
+        const { orderId } = req.params;
+
+        // Find the order by ID
+        const order = await Order.findById(orderId)
+            .populate('customer') // Populate customer details
+            .populate('items.product'); // Populate product details in items
+
+        if (!order) {
+            return res.status(404).json({ msg: 'Order not found' });
+        }
+
+        // Respond with the order details
+        res.status(200).json(order);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ msg: 'Server error' });
+    }
+};

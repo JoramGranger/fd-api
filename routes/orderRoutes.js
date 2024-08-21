@@ -16,5 +16,7 @@ router.get('/', auth.protect, auth.admin, orderController.getAllOrders);
 // Route to get all orders for a specific customer
 router.get('/my/:userId', auth.protect, orderController.getOrdersByCustomer);
 
+router.get('/:orderId', auth.protect, orderController.getOrderById);
+
 
 module.exports = router;

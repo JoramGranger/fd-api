@@ -91,6 +91,7 @@ exports.updateProfile = async (req, res) => {
 
     user.name = name || user.name;
     user.email = email || user.email;
+    user.phone = phone || user.phone;
     await user.save();
     console.log(`${name} '' ${email}`);
 
